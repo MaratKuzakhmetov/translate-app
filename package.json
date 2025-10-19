@@ -1,0 +1,31 @@
+{
+  "name": "translate-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "15.5.6",
+    "openai": "^6.5.0",
+    "postcss-import": "^16.1.1",
+    "postcss-nesting": "^13.0.2",
+    "postcss-simple-vars": "^7.0.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.6",
+    "postcss": "^8.5.6",
+    "typescript": "^5"
+  }
+}
