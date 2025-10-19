@@ -4,16 +4,22 @@ import OpenAI from 'openai';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req: Request) {
-  const { sourceLang, text, mode } = await req.json();
+  const { sourceLang, text, mode, targetLangs } = await req.json();
 
-  const targetLangs = ['de', 'en', 'ru'].filter(l => l !== sourceLang);
+  // Если список языков не пришёл — переводим на все кроме исходного
+  const targets =
+    Array.isArray(targetLangs) && targetLangs.length > 0
+      ? targetLangs
+      : ['de', 'en', 'ru'].filter(l => l !== sourceLang);
+
   const results: Record<string, string> = {};
 
   try {
     if (mode === 'google') {
-      // 🟢 Google Translate API
+      // 🟢 Перевод через Google
       const googleApiKey = process.env.GOOGLE_API_KEY;
-      for (const target of targetLangs) {
+
+      for (const target of targets) {
         const res = await fetch(
           `https://translation.googleapis.com/language/translate/v2?key=${googleApiKey}`,
           {
@@ -27,14 +33,17 @@ export async function POST(req: Request) {
             }),
           }
         );
+
         const data = await res.json();
+
+        // API Google всегда возвращает массив переводов
         results[target] = data.data.translations[0].translatedText;
       }
     } else {
-      // 🔵 OpenAI GPT translation
-      const prompt = `Translate this text into ${targetLangs.join(
+      // 🤖 Перевод через OpenAI GPT
+      const prompt = `Translate this text into ${targets.join(
         ' and '
-      )}:\n"${text}"\nRespond strictly in JSON format like {"de":"...","en":"...","ru":"..."}.`;
+      )}:\n"${text}"\n\nReturn strictly in JSON format like {"de":"...","en":"..."} — include only requested languages.`;
 
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',

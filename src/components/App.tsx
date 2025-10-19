@@ -9,9 +9,17 @@ export default function App() {
   const [source, setSource] = useState<'de' | 'en' | 'ru'>('en');
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'google' | 'gpt'>('google');
+  const [translateTo, setTranslateTo] = useState<{ [key: string]: boolean }>({
+    de: true,
+    en: true,
+    ru: true,
+  });
 
   const handleTranslate = async () => {
     setLoading(true);
+
+    const targetLangs = ['de', 'en', 'ru'].filter(l => l !== source && translateTo[l]);
+
     const res = await fetch('/api/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -19,8 +27,10 @@ export default function App() {
         sourceLang: source,
         text: texts[source],
         mode,
+        targetLangs,
       }),
     });
+
     const data = await res.json();
     setTexts(prev => ({ ...prev, ...data }));
     setLoading(false);
@@ -28,7 +38,15 @@ export default function App() {
 
   return (
     <div className={styles.container}>
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: '1rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+          marginTop: '1rem',
+          justifyContent: 'center',
+        }}
+      >
         <label>
           <input
             type="radio"
@@ -58,6 +76,9 @@ export default function App() {
             value={texts[lang as 'de' | 'en' | 'ru']}
             onChange={val => setTexts(prev => ({ ...prev, [lang]: val }))}
             onFocus={() => setSource(lang as 'de' | 'en' | 'ru')}
+            translateEnabled={translateTo[lang]}
+            onToggleTranslate={() => setTranslateTo(prev => ({ ...prev, [lang]: !prev[lang] }))}
+            isSource={source === lang}
           />
         ))}
       </div>

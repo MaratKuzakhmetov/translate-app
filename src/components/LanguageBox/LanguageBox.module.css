@@ -1,27 +1,87 @@
 .root {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.2s ease;
+}
+
+.disabled {
+  opacity: 0.6;
 }
 
 .label {
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
 }
 
 .textarea {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px;
-  min-height: 150px;
-  resize: none;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.4;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  flex: 1;
+  border: 1px solid #d0d7de;
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-height: 160px;
+  resize: vertical;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #222;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
 }
 
 .textarea:focus {
   outline: none;
-  border-color: #3b82f6; /* синий акцент */
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: #2563eb;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* 🔘 красивый переключатель */
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.switch input {
+  appearance: none;
+  width: 38px;
+  height: 20px;
+  border-radius: 20px;
+  background-color: #ccc;
+  position: relative;
+  outline: none;
+  transition: background-color 0.2s;
+}
+
+.switch input::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.switch input:checked {
+  background-color: #2563eb;
+}
+
+.switch input:checked::before {
+  transform: translateX(18px);
+}
+
+.switchLabel {
+  font-size: 14px;
+  color: #333;
+  user-select: none;
 }
