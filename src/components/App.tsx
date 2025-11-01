@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { LanguageBox } from './LanguageBox';
 import styles from './App.module.css';
@@ -13,11 +13,21 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [translateTo, setTranslateTo] = useState({ de: true, en: true, ru: true });
   const [order, setOrder] = useState(languages);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    handler();
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   const handleTranslate = async () => {
     setLoading(true);
 
-    const targetLangs = ['de', 'en', 'ru'].filter(l => l !== source && translateTo[l]);
+    const targetLangs = languages.filter(
+      (l): l is 'de' | 'en' | 'ru' => l !== source && translateTo[l]
+    );
 
     const res = await fetch('/api/translate', {
       method: 'POST',
@@ -46,7 +56,7 @@ export default function App() {
   return (
     <div className={styles.container}>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="languages" direction="horizontal">
+        <Droppable droppableId="languages" direction={isMobile ? 'vertical' : 'horizontal'}>
           {provided => (
             <div className={styles.grid} {...provided.droppableProps} ref={provided.innerRef}>
               {order.map((lang, index) => (
