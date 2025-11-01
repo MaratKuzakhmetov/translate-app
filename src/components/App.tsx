@@ -8,7 +8,6 @@ export default function App() {
   const [texts, setTexts] = useState({ de: '', en: '', ru: '' });
   const [source, setSource] = useState<'de' | 'en' | 'ru'>('en');
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<'google' | 'gpt'>('google');
   const [translateTo, setTranslateTo] = useState<{ [key: string]: boolean }>({
     de: true,
     en: true,
@@ -26,7 +25,6 @@ export default function App() {
       body: JSON.stringify({
         sourceLang: source,
         text: texts[source],
-        mode,
         targetLangs,
       }),
     });
@@ -38,36 +36,6 @@ export default function App() {
 
   return (
     <div className={styles.container}>
-      <div
-        style={{
-          display: 'flex',
-          gap: '1rem',
-          alignItems: 'center',
-          marginTop: '1rem',
-          justifyContent: 'center',
-        }}
-      >
-        <label>
-          <input
-            type="radio"
-            value="google"
-            checked={mode === 'google'}
-            onChange={() => setMode('google')}
-          />{' '}
-          🌐 Google
-        </label>
-
-        <label>
-          <input
-            type="radio"
-            value="gpt"
-            checked={mode === 'gpt'}
-            onChange={() => setMode('gpt')}
-          />{' '}
-          🤖 GPT
-        </label>
-      </div>
-
       <div className={styles.grid}>
         {['de', 'en', 'ru'].map(lang => (
           <LanguageBox
