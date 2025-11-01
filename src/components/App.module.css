@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  align-items: stretch; /* ✅ */
+  align-items: center;
   gap: 20px;
   padding: 24px;
   max-width: 1200px;
@@ -10,17 +10,29 @@
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* адаптивно */
-  gap: 16px;
-  width: 100%; /* важно */
-  align-items: stretch; /* растягивает ячейки одинаково */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  align-items: flex-start;
+  margin: -8px;
+}
+.box {
+  margin: 8px;
+  flex: 1 1 320px;
+  min-width: 280px;
+  max-width: 360px;
+  transition: box-shadow 0.25s ease;
 }
 
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.box:active {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.activeBox {
+  border: 2px solid #2563eb;
+  border-radius: 10px;
+  background-color: #f0f6ff;
 }
 
 .button {
@@ -32,7 +44,6 @@
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .button:hover:not(:disabled) {

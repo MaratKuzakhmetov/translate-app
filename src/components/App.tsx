@@ -1,18 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { LanguageBox } from './LanguageBox';
 import styles from './App.module.css';
+
+const languages: ('de' | 'en' | 'ru')[] = ['de', 'en', 'ru'];
 
 export default function App() {
   const [texts, setTexts] = useState({ de: '', en: '', ru: '' });
   const [source, setSource] = useState<'de' | 'en' | 'ru'>('en');
   const [loading, setLoading] = useState(false);
-  const [translateTo, setTranslateTo] = useState<{ [key: string]: boolean }>({
-    de: true,
-    en: true,
-    ru: true,
-  });
+  const [translateTo, setTranslateTo] = useState({ de: true, en: true, ru: true });
+  const [order, setOrder] = useState(languages);
 
   const handleTranslate = async () => {
     setLoading(true);
@@ -34,22 +34,50 @@ export default function App() {
     setLoading(false);
   };
 
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    const items = Array.from(order);
+    const [moved] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, moved);
+    setOrder(items);
+    setSource(items[0]); // первый — источник
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.grid}>
-        {['de', 'en', 'ru'].map(lang => (
-          <LanguageBox
-            key={lang}
-            lang={lang}
-            value={texts[lang as 'de' | 'en' | 'ru']}
-            onChange={val => setTexts(prev => ({ ...prev, [lang]: val }))}
-            onFocus={() => setSource(lang as 'de' | 'en' | 'ru')}
-            translateEnabled={translateTo[lang]}
-            onToggleTranslate={() => setTranslateTo(prev => ({ ...prev, [lang]: !prev[lang] }))}
-            isSource={source === lang}
-          />
-        ))}
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="languages" direction="horizontal">
+          {provided => (
+            <div className={styles.grid} {...provided.droppableProps} ref={provided.innerRef}>
+              {order.map((lang, index) => (
+                <Draggable key={lang} draggableId={lang} index={index}>
+                  {providedDrag => (
+                    <div
+                      ref={providedDrag.innerRef}
+                      {...providedDrag.draggableProps}
+                      {...providedDrag.dragHandleProps}
+                      className={`${styles.box} ${source === lang ? styles.activeBox : ''}`}
+                    >
+                      <LanguageBox
+                        lang={lang}
+                        value={texts[lang]}
+                        onChange={val => setTexts(prev => ({ ...prev, [lang]: val }))}
+                        onFocus={() => setSource(lang)}
+                        translateEnabled={translateTo[lang]}
+                        onToggleTranslate={() =>
+                          setTranslateTo(prev => ({ ...prev, [lang]: !prev[lang] }))
+                        }
+                        isSource={source === lang}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <button onClick={handleTranslate} disabled={loading} className={styles.button}>
         {loading ? 'Перевожу…' : 'Перевести'}

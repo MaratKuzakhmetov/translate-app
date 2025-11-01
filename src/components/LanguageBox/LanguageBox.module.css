@@ -3,7 +3,6 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  transition: opacity 0.2s ease;
 }
 
 .disabled {
@@ -30,7 +29,6 @@
   line-height: 1.5;
   color: #222;
   background-color: #fafafa;
-  transition: all 0.2s ease;
 }
 
 .textarea:focus {
@@ -57,7 +55,6 @@
   background-color: #ccc;
   position: relative;
   outline: none;
-  transition: background-color 0.2s;
 }
 
 .switch input::before {
@@ -69,7 +66,6 @@
   background: #fff;
   top: 2px;
   left: 2px;
-  transition: transform 0.2s;
 }
 
 .switch input:checked {
