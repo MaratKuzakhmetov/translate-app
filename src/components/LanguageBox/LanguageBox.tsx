@@ -5,20 +5,20 @@ type Props = {
   lang: string;
   value: string;
   onChange: (v: string) => void;
-  onFocus: () => void;
   translateEnabled: boolean;
   onToggleTranslate: () => void;
   isSource: boolean;
+  isEditable: boolean;
 };
 
 export const LanguageBox = ({
   lang,
   value,
   onChange,
-  onFocus,
   translateEnabled,
   onToggleTranslate,
   isSource,
+  isEditable,
 }: Props) => {
   const labels: Record<string, string> = {
     de: '🇩🇪 Немецкий',
@@ -26,22 +26,24 @@ export const LanguageBox = ({
     ru: '🇷🇺 Русский',
   };
 
+  const boxClass = `${styles.root} ${isEditable ? styles.editable : styles.readonly} ${
+    !translateEnabled && !isSource ? styles.disabled : ''
+  }`;
+
   return (
-    <div className={`${styles.root} ${!translateEnabled && !isSource ? styles.disabled : ''}`}>
+    <div className={boxClass}>
       <label className={styles.label}>{labels[lang]}</label>
 
       <textarea
         className={styles.textarea}
         value={value}
         onChange={e => onChange(e.target.value)}
-        onFocus={onFocus}
-        disabled={!translateEnabled && !isSource}
+        disabled={!isEditable}
       />
 
       {!isSource && (
         <label className={styles.switch}>
           <input type="checkbox" checked={translateEnabled} onChange={onToggleTranslate} />
-          <span className={styles.slider}></span>
           <span className={styles.switchLabel}>Переводить на этот язык</span>
         </label>
       )}

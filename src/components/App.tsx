@@ -9,7 +9,7 @@ const languages: ('de' | 'en' | 'ru')[] = ['de', 'en', 'ru'];
 
 export default function App() {
   const [texts, setTexts] = useState({ de: '', en: '', ru: '' });
-  const [source, setSource] = useState<'de' | 'en' | 'ru'>('en');
+  const [source, setSource] = useState<'de' | 'en' | 'ru'>('de');
   const [loading, setLoading] = useState(false);
   const [translateTo, setTranslateTo] = useState({ de: true, en: true, ru: true });
   const [order, setOrder] = useState(languages);
@@ -40,7 +40,7 @@ export default function App() {
     const [moved] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, moved);
     setOrder(items);
-    setSource(items[0]); // первый — источник
+    setSource(items[0]);
   };
 
   return (
@@ -62,12 +62,12 @@ export default function App() {
                         lang={lang}
                         value={texts[lang]}
                         onChange={val => setTexts(prev => ({ ...prev, [lang]: val }))}
-                        onFocus={() => setSource(lang)}
                         translateEnabled={translateTo[lang]}
                         onToggleTranslate={() =>
                           setTranslateTo(prev => ({ ...prev, [lang]: !prev[lang] }))
                         }
                         isSource={source === lang}
+                        isEditable={index === 0}
                       />
                     </div>
                   )}

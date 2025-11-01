@@ -81,3 +81,54 @@
   color: #333;
   user-select: none;
 }
+
+.root {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.root.readonly {
+  background-color: #f3f4f6; /* 🩶 светло-серый, как Google Translate */
+}
+
+.root.editable {
+  background-color: #fff; /* 🤍 активное поле для ввода */
+}
+
+.label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.textarea {
+  border: none;
+  resize: none;
+  min-height: 150px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  background: transparent;
+  color: #111;
+}
+
+.textarea:disabled {
+  color: #555;
+  cursor: default;
+}
+
+.switch {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.switchLabel {
+  font-size: 13px;
+  color: #444;
+}
